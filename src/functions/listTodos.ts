@@ -6,14 +6,16 @@ export const handle: APIGatewayProxyHandler = async (event) => {
   const { userId } = event.pathParameters;
 
   const response = await document
-    .query({
+    .scan({
       TableName: "todos",
-      KeyConditionExpression: "user_id = :user_id",
+      FilterExpression: "user_id = :user_id",
       ExpressionAttributeValues: {
         ":user_id": userId,
       },
     })
     .promise();
+
+  console.log(response)
 
 
   return {

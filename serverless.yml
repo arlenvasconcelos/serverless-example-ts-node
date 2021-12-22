@@ -18,21 +18,12 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
-  bucket: serverlesscertificatesignite
 
 provider:
   name: aws
   region: sa-east-1
   runtime: nodejs14.x
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:*
-      Resource: "*"
-    - Effect: Allow
-      Action:
-        - s3:*
-      Resource: "*"
+
 
 functions:
   createTodo:
@@ -42,12 +33,7 @@ functions:
           path: /todos/{userId}
           method: POST
           cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:PutItem
-        Resource: "arn:aws:dynamodb:${self.provider.region}:*:table/todos"
+    
   listTodos:
     handler: src/functions/listTodos.handle
     events:
@@ -55,15 +41,11 @@ functions:
           path: /todos/{userId}
           method: GET
           cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-        Resource: "arn:aws:dynamodb:${self.provider.region}:*:table/todos"
+    
 
 resources:
   Resources:
-    dbCertificateTodos:
+    dbTodos:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: todos
@@ -76,7 +58,7 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-    dbCertificateUsers:
+    dbUsers:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: users

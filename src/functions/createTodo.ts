@@ -27,12 +27,6 @@ export const handle = async (event) => {
       })
       .promise();
 
-  console.log(await document
-    .scan({
-      TableName: "todos"
-    })
-    .promise())
-
   return {
     statusCode: 201,
     body: JSON.stringify(newTodo),
